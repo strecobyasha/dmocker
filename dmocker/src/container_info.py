@@ -1,3 +1,6 @@
+"""
+Configuration for the information about each container.
+"""
 
 
 class ContainerInfo:

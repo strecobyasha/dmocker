@@ -36,9 +36,10 @@ def main():
                 else:
                     [connector.get_containers(all_containers=True, name=args.name) for connector in connections]
             case 'logs':
-                logs_num, follow = '10', False
+                # Container logs.
+                logs_num, follow = 10, False
                 if len(args.task) > 2:
-                    logs_num = args.task[2]
+                    logs_num = int(args.task[2])
                     if len(args.task) == 4:
                         follow = args.task[3] == 'f'
                 connections[0].get_logs(args.task[1], logs_num, follow)

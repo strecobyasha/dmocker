@@ -34,19 +34,19 @@ class TestArgParser(unittest.TestCase):
     def test_get_logs(self):
         sys.argv = ['main.py', 'server1', '-t', 'logs', CONTAINER_ID]
         main()
-        self.assertTrue(result == (CONTAINER_ID, '10', False))
+        self.assertTrue(result == (CONTAINER_ID, 10, False))
 
     @patch('dmocker.Connector', MockConnector)
     def test_get_logs_number(self):
         sys.argv = ['main.py', 'server1', '-t', 'logs', CONTAINER_ID, '20']
         main()
-        self.assertTrue(result == (CONTAINER_ID, '20', False))
+        self.assertTrue(result == (CONTAINER_ID, 20, False))
 
     @patch('dmocker.Connector', MockConnector)
     def test_get_logs_number_follow(self):
         sys.argv = ['main.py', 'server1', '-t', 'logs', CONTAINER_ID, '20', 'f']
         main()
-        self.assertTrue(result == (CONTAINER_ID, '20', True))
+        self.assertTrue(result == (CONTAINER_ID, 20, True))
 
     @patch('dmocker.Connector', MockConnector)
     def test_get_logs_many_servers(self):

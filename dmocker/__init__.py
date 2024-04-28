@@ -1,6 +1,7 @@
 import argparse
 import threading
 
+from .exceptions.validator import validate
 from .src.connector import Connector
 
 
@@ -9,6 +10,9 @@ def main():
     parser.add_argument('servers', action='store', type=str, nargs='*')
     parser.add_argument('-t', '--task', action='store', type=str, nargs='*')
     args = parser.parse_args()
+    # Validate params
+    if args.task:
+        validate(args)
     # Establish connection to the remote servers.
     connections = list()
     def connect(server): connections.append(Connector(server))
@@ -22,8 +26,13 @@ def main():
     if not args.task:
         [connector.get_containers() for connector in connections]
     else:
-        match args.task[0]:
+        task = args.task[0]
+        match task:
             case 'ps':
-                [connector.get_containers() for connector in connections]
+                # List of containers.
+                if len(args.task) == 1:
+                    [connector.get_containers() for connector in connections]
+                else:
+                    [connector.get_containers(all_containers=True) for connector in connections]
             case _:
                 [connector.get_containers() for connector in connections]

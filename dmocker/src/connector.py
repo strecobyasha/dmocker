@@ -16,11 +16,14 @@ class Connector:
         except paramiko.ssh_exception.AuthenticationException:
             self.client = docker.APIClient(f'ssh://{server}', use_ssh_client=True, version='1.41')
 
-    def get_containers(self, all_containers: bool = False):
+    def get_containers(self, all_containers: bool = False, name: str = ''):
         """ Get the list of containers. """
         print(f'Server: {self.server}')
         print('ID'.ljust(20), 'IMAGE'.ljust(40), 'STATUS'.ljust(30), 'NAME')
-        for container in self.client.containers(all=all_containers):
+        for container in self.client.containers(all=all_containers, filters={'name': name}):
             info = ContainerInfo(container)
             print(info.id.ljust(20), info.image.ljust(40), info.status.ljust(30), info.name)
-        print('\n')
+        self.client.close()
+
+    def get_logs(self, container_id: str, logs_num: int = 10, follow: bool = False):
+        """ Get logs of the container. """

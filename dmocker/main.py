@@ -2,6 +2,7 @@ import argparse
 import threading
 
 from .exceptions.validator import validate
+from .src.arguments import add_arguments, epilog
 from .src.fetcher import Fetcher
 
 
@@ -19,10 +20,12 @@ def get_connections(servers: list) -> list:
 
 def router():
     """ Define and initiate the task based on passed parameters. """
-    parser = argparse.ArgumentParser()
-    parser.add_argument('servers', action='store', type=str, nargs='*')
-    parser.add_argument('-t', '--task', action='store', type=str, nargs='*')
-    parser.add_argument('-n', '--name', type=str, default='')
+    parser = argparse.ArgumentParser(
+        description='A controller for remote Docker containers',
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    add_arguments(parser)
     args = parser.parse_args()
     # Validate params before establishing connections.
     if args.task:

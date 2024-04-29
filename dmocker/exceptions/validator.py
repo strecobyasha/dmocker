@@ -15,7 +15,7 @@ def validate(args):
                 raise TooManyServersException(args.servers)
             elif len(args.task) == 1:
                 raise NotEnoughArgsException()
-            elif len(args.task) > 2 and not args.task[2].isdigit():
+            elif len(args.task) > 2 and (not args.task[2].isdigit() and args.task[2] != 'f'):
                 raise LogsNumberException(args.task[2])
             elif len(args.task) == 4 and args.task[3] != 'f':
                 raise LogsFollowException(args.task[3])

@@ -19,9 +19,9 @@ class MockFetcher:
         pass
 
     @classmethod
-    def get_logs(cls, container_id: str, logs_num: int = 10, follow: bool = False):
+    def get_logs(cls, container: str, logs_num: int = 10, follow: bool = False):
         global result
-        result = (container_id, logs_num, follow)
+        result = (container, logs_num, follow)
 
 
 class TestArgParser(unittest.TestCase):
@@ -47,6 +47,12 @@ class TestArgParser(unittest.TestCase):
         sys.argv = ['local.py', 'server1', '-t', 'logs', CONTAINER_ID, '20', 'f']
         router()
         self.assertTrue(result == (CONTAINER_ID, 20, True))
+
+    @patch('dmocker.main.Fetcher', MockFetcher)
+    def test_get_logs_follow(self):
+        sys.argv = ['local.py', 'server1', '-t', 'logs', CONTAINER_ID, 'f']
+        router()
+        self.assertTrue(result == (CONTAINER_ID, 10, True))
 
     @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_logs_many_servers(self):

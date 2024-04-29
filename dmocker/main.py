@@ -45,9 +45,14 @@ def router():
                 # Container logs.
                 logs_num, follow = 10, False
                 if len(args.task) > 2:
-                    logs_num = int(args.task[2])
-                    if len(args.task) == 4:
-                        follow = args.task[3] == 'f'
+                    try:
+                        logs_num = int(args.task[2])
+                    except ValueError:
+                        logs_num = 10
+                        follow = True
+                    else:
+                        if len(args.task) == 4:
+                            follow = args.task[3] == 'f'
                 connections[0].get_logs(args.task[1], logs_num, follow)
             case _:
                 [connector.get_containers() for connector in connections]

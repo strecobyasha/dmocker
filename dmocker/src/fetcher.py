@@ -25,5 +25,13 @@ class Fetcher:
             print(info.id.ljust(20), info.image.ljust(40), info.status.ljust(30), info.name)
         self.client.close()
 
-    def get_logs(self, container_id: str, logs_num: int = 10, follow: bool = False):
+    def get_logs(self, container: str, logs_num: int = 10, follow: bool = False):
         """ Get logs of the container. """
+        print(f'Server: {self.server}, container: {container}')
+        logs = self.client.logs(container, tail=logs_num, stream=follow)
+        if follow:
+            for log in logs:
+                print(log.decode())
+        else:
+            for log in logs.decode().split('\n'):
+                print(log)

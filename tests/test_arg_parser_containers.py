@@ -3,8 +3,8 @@ Test options to get the list of containers.
 """
 import sys
 import unittest
-from unittest.mock import patch
 
+import dmocker
 from dmocker.main import router
 from dmocker.exceptions.custom import WrongFlagException, TooManyFlagsException
 
@@ -34,44 +34,38 @@ class TestArgParser(unittest.TestCase):
     def setUp(self):
         global result
         result = None
+        dmocker.main.Fetcher = MockFetcher
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_running_containers(self):
         sys.argv = ['local.py', 'server1', 'server2']
         router()
         self.assertTrue(result == GET_RUNNING_MSG)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_running_filtered_containers(self):
         sys.argv = ['local.py', 'server1', 'server2', '-n', 'container_name']
         router()
         self.assertTrue(result == GET_RUNNING_FILTERED_MSG)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_running_containers_task(self):
         sys.argv = ['local.py', 'server1', 'server2', '-t', 'ps']
         router()
         self.assertTrue(result == GET_RUNNING_MSG)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_running_containers_filtered_task(self):
         sys.argv = ['local.py', 'server1', 'server2', '-t', 'ps', '-n', 'container_name']
         router()
         self.assertTrue(result == GET_RUNNING_FILTERED_MSG)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_all_containers(self):
         sys.argv = ['local.py', 'server1', 'server2', '-t', 'ps', 'a']
         router()
         self.assertTrue(result == GET_ALL_MSG)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_all_containers_filtered(self):
         sys.argv = ['local.py', 'server1', 'server2', '-t', 'ps', 'a', '-n', 'container_name']
         router()
         self.assertTrue(result == GET_ALL_FILTERED_MSG)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_containers_wrong_flag(self):
         flag = 'b'
         sys.argv = ['local.py', 'server1', 'server2', '-t', 'ps', flag]
@@ -79,7 +73,6 @@ class TestArgParser(unittest.TestCase):
             router()
         self.assertTrue(context.exception.args == WrongFlagException(flag).args)
 
-    @patch('dmocker.main.Fetcher', MockFetcher)
     def test_get_containers_too_many_flags(self):
         flags = ['a', 'b']
         sys.argv = ['local.py', 'server1', 'server2', '-t', 'ps', *flags]

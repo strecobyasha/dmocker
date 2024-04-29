@@ -129,5 +129,5 @@ cython_debug/
 # Custom
 todo
 tests.py
-main.py
+local.py
 pyproject.toml

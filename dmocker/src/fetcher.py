@@ -7,7 +7,7 @@ import paramiko
 from .container_info import ContainerInfo
 
 
-class Connector:
+class Fetcher:
 
     def __init__(self, server: str):
         self.server = server

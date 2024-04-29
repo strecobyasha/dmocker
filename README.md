@@ -1,7 +1,5 @@
 <h1> Welcome to dmocker! </h1>
 
-***
-
 <p>Dmocker is a small terminal tool to interact with remote Docker containers. The use case of this tool is when
 you have Docker containers on multiple remote servers and don't use large solutions to monitor and interact with them.
 Dmocker allows to execute different commands on the remote devices simultaneously, saving time on manually established

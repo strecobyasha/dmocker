@@ -4,7 +4,7 @@ Interface for the communication with the remote Docker engine.
 import docker
 import paramiko
 
-from .container_info import ContainerInfo
+from .container_info import ContainerInfo, Columns
 
 
 class Fetcher:
@@ -19,10 +19,20 @@ class Fetcher:
     def get_containers(self, all_containers: bool = False, name: str = ''):
         """ Get the list of containers. """
         print(f'Server: {self.server}')
-        print('ID'.ljust(20), 'IMAGE'.ljust(40), 'STATUS'.ljust(30), 'NAME')
+        print(
+            'ID'.ljust(Columns.ID_COLUMN_WIDTH),
+            'IMAGE'.ljust(Columns.IMAGE_COLUMN_WIDTH),
+            'STATUS'.ljust(Columns.STATUS_COLUMN_WIDTH),
+            'NAME',
+        )
         for container in self.client.containers(all=all_containers, filters={'name': name}):
             info = ContainerInfo(container)
-            print(info.id.ljust(20), info.image.ljust(40), info.status.ljust(30), info.name)
+            print(
+                info.id.ljust(Columns.ID_COLUMN_WIDTH),
+                info.image.ljust(Columns.IMAGE_COLUMN_WIDTH),
+                info.status.ljust(Columns.STATUS_COLUMN_WIDTH),
+                info.name,
+            )
         self.client.close()
 
     def get_logs(self, container: str, logs_num: int = 10, follow: bool = False):
@@ -30,8 +40,12 @@ class Fetcher:
         print(f'Server: {self.server}, container: {container}')
         logs = self.client.logs(container, tail=logs_num, stream=follow)
         if follow:
-            for log in logs:
-                print(log.decode())
+            try:
+                for log in logs:
+                    print(log.decode())
+            except KeyboardInterrupt:
+                self.client.close()
         else:
             for log in logs.decode().split('\n'):
                 print(log)
+            self.client.close()

@@ -1,8 +1,10 @@
 """
 Validate parameters, that were passed to the main function.
 """
-from .custom import WrongFlagException, TooManyFlagsException, NotEnoughArgsException, LogsNumberException, \
-    LogsFollowException, TooManyParamsException, TooManyServersException
+from .custom import (LogsFollowException, LogsNumberException,
+                     NotEnoughArgsException, TooManyFlagsException,
+                     TooManyParamsException, TooManyServersException,
+                     WrongFlagException)
 
 
 def validate(args):

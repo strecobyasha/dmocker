@@ -5,8 +5,8 @@ import sys
 import unittest
 
 import dmocker
+from dmocker.exceptions.custom import TooManyFlagsException, WrongFlagException
 from dmocker.main import router
-from dmocker.exceptions.custom import WrongFlagException, TooManyFlagsException
 
 result = None
 GET_RUNNING_MSG = 'get running containers'

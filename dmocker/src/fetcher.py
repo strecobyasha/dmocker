@@ -4,7 +4,7 @@ Interface for the communication with the remote Docker engine.
 import docker
 import paramiko
 
-from .container_info import ContainerInfo, Columns
+from .container_info import Columns, ContainerInfo
 
 
 class Fetcher:

@@ -6,8 +6,11 @@ import unittest
 
 import dmocker
 from dmocker import router
-from dmocker.exceptions.custom import TooManyServersException, NotEnoughArgsException, LogsNumberException, \
-    LogsFollowException, TooManyParamsException
+from dmocker.exceptions.custom import (LogsFollowException,
+                                       LogsNumberException,
+                                       NotEnoughArgsException,
+                                       TooManyParamsException,
+                                       TooManyServersException)
 
 result = None
 CONTAINER_ID = 'f077a7bcd77f'

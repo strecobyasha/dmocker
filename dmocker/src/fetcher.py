@@ -1,10 +1,35 @@
 """
 Interface for the communication with the remote Docker engine.
 """
+import os
+import urllib.parse
+
 import docker
 import paramiko
+from docker.transport import SSHHTTPAdapter
 
 from .container_info import Columns, ContainerInfo
+
+
+SSHHTTPAdapter_create_paramiko_client = SSHHTTPAdapter._create_paramiko_client
+
+
+def custom_ssh_http_adapter(self, base_url):
+    """ Set ssh port from ssh/config file in a case of non-standard port. """
+    SSHHTTPAdapter_create_paramiko_client(self, base_url)
+    base_url = urllib.parse.urlparse(base_url)
+    ssh_config_file = os.path.expanduser('~/.ssh/config')
+    if os.path.exists(ssh_config_file):
+        conf = paramiko.SSHConfig()
+        with open(ssh_config_file) as f:
+            conf.parse(f)
+        host_config = conf.lookup(base_url.hostname)
+        if base_url.port == 22 and 'port' in host_config:
+            self.ssh_params['port'] = host_config['port']
+            self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+
+SSHHTTPAdapter._create_paramiko_client = custom_ssh_http_adapter
 
 
 class Fetcher:
